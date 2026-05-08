@@ -4,7 +4,7 @@ original_dir="$(pwd)"
 current_time="$(date +%Y_%m_%d_%H_%M_%S)"
 work_dir=".nodequality$current_time"
 bench_os_url="https://github.com/LloydAsp/NodeQuality/releases/download/v0.0.2/BenchOs.tar.gz"
-raw_file_prefix="https://raw.githubusercontent.com/LloydAsp/NodeQuality/refs/heads/main"
+raw_file_prefix="https://raw.githubusercontent.com/PureBench/NodeQuality/refs/heads/main"
 
 if uname -m | grep -Eq 'arm|aarch64'; then
     bench_os_url="https://github.com/LloydAsp/NodeQuality/releases/download/v0.0.2/BenchOs-arm.tar.gz"
