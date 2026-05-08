@@ -38,7 +38,7 @@ LANG[en.ask_iq]="Run IPQuality test? (Enter for default 'y') [y/n]: "
 LANG[en.ask_nq]="Run NetQuality test? (Enter for default 'y', 'l' for low-data mode) [y/l/n]: "
 LANG[en.ask_bt]="Run Backroute Trace test? (Enter for default 'y') [y/n]: "
 LANG[en.cleanup_before]="Clean Up before Installation"
-LANG[en.loadbench]="Load BenchOs"
+LANG[en.loadbench]="Load BenchOS"
 LANG[en.basicinfo]="Hardware Info"
 LANG[en.run_hq]="Running Hardware Quality Test..."
 LANG[en.run_iq]="Running IP Quality Test..."
@@ -57,7 +57,7 @@ LANG[cn.ask_iq]="运行 IPQuality 测试？（回车默认 'y'）[y/n]："
 LANG[cn.ask_nq]="运行 NetQuality 测试？（回车默认 'y'，'l' 为低流量模式）[y/l/n]："
 LANG[cn.ask_bt]="运行 回程路由追踪（Backroute Trace）测试？（回车默认 'y'）[y/n]："
 LANG[cn.cleanup_before]="安装前清理"
-LANG[cn.loadbench]="加载 BenchOs"
+LANG[cn.loadbench]="加载 BenchOS"
 LANG[cn.basicinfo]="硬件信息"
 LANG[cn.run_hq]="正在运行硬件质量测试..."
 LANG[cn.run_iq]="正在运行 IP 质量测试..."
@@ -199,18 +199,19 @@ function pre_cleanup(){
 function clear_mount(){
     swapoff $work_dir/swap 2>/dev/null
 
-    umount $work_dir/BenchOs/proc/ 2> /dev/null
-    umount $work_dir/BenchOs/sys/ 2> /dev/null
-    umount -R $work_dir/BenchOs/dev/ 2> /dev/null
+    umount $work_dir/BenchOS/proc/ 2> /dev/null
+    umount $work_dir/BenchOS/sys/ 2> /dev/null
+    umount -R $work_dir/BenchOS/dev/ 2> /dev/null
 }
 
 function load_bench_os(){
     cd $work_dir
-    rm -rf BenchOs
+    rm -rf BenchOS
 
-    curl "-L#o" BenchOs.tar.gz $bench_os_url
-    tar -xzf BenchOs.tar.gz     
-    cd $work_dir/BenchOs
+    curl "-L#o" BenchOS.tar.gz $bench_os_url
+    mkdir -p $work_dir/BenchOS
+    tar -xzf BenchOS.tar.gz -C $work_dir/BenchOS
+    cd $work_dir/BenchOS
 
     mount -t proc /proc proc/
     mount --bind /sys sys/
@@ -222,7 +223,7 @@ function load_bench_os(){
 }
 
 function chroot_run(){
-    chroot $work_dir/BenchOs /bin/bash -c "$*"
+    chroot $work_dir/BenchOS /bin/bash -c "$*"
 }
 
 function load_part(){
@@ -442,7 +443,7 @@ function post_cleanup(){
 
     post_check_mount
 
-    rm -rf $work_dir/BenchOs
+    rm -rf $work_dir/BenchOS
 
     if [[ "$work_dir" == *"nodequality"* ]]; then
         rm -rf "${work_dir}"/
@@ -507,7 +508,7 @@ function main(){
 
     _green_bold "$(L basicinfo)"
 
-    result_directory=$work_dir/BenchOs/result
+    result_directory=$work_dir/BenchOS/result
     mkdir -p $result_directory
     run_header > $result_directory/$header_info_filename
 
