@@ -1,5 +1,6 @@
 #!/bin/bash
 
+original_dir="$(pwd)"
 current_time="$(date +%Y_%m_%d_%H_%M_%S)"
 work_dir=".nodequality$current_time"
 bench_os_url="https://github.com/LloydAsp/NodeQuality/releases/download/v0.0.2/BenchOs.tar.gz"
@@ -44,6 +45,7 @@ LANG[en.run_iq]="Running IP Quality Test..."
 LANG[en.run_nq]="Running Network Quality Test..."
 LANG[en.run_bt]="Running Backroute Trace..."
 LANG[en.cleanup_after]="Clean Up after Installation"
+LANG[en.results_saved]="Test results have been saved to current directory"
 # ===== Chinese =====
 LANG[cn.err01]="错误：work_dir不包含'nodequality'！"
 LANG[cn.err02]="错误：不支持的参数！"
@@ -62,6 +64,7 @@ LANG[cn.run_iq]="正在运行 IP 质量测试..."
 LANG[cn.run_nq]="正在运行网络质量测试..."
 LANG[cn.run_bt]="正在运行回程路由追踪..."
 LANG[cn.cleanup_after]="安装后清理"
+LANG[cn.results_saved]="测试结果已保存到当前目录"
 
 function L(){
     local key="${lang}.${1}"
@@ -427,14 +430,10 @@ function run_net_trace(){
     chroot_run bash <(curl -Ls https://Net.Check.Place) $opt_ipv $opt_lang -R -n -S 123 -o /result/$backroute_trace_json_filename
 }
 
-uploadAPI="https://api.nodequality.com/api/v1/record"
-function upload_result(){
-
-    chroot_run zip -j - "/result/*" > $work_dir/result.zip
-
-    base64 $work_dir/result.zip | curl -X POST  --data-binary @- $uploadAPI
-
-    echo
+function save_results(){
+    # Copy test results to original directory
+    cp -r result/* "$original_dir/" 2>/dev/null || true
+    _green "✓ $(L results_saved)"
 }
 
 function post_cleanup(){
@@ -532,7 +531,7 @@ function main(){
         run_net_trace | tee $result_directory/$backroute_trace_filename
     fi
 
-    upload_result
+    save_results
     _green_bold "$(L cleanup_after)"
     post_cleanup
 }
