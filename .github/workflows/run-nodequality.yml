@@ -18,13 +18,13 @@ jobs:
 
       - name: Make script executable
         run: |
-          chmod +x NodeQuality/NodeQuality.sh
+          chmod +x NodeQuality.sh
 
       - name: Run NodeQuality non-interactively
         run: |
           set -euo pipefail
           # Provide default answers (4 empty lines) so `read` in the script doesn't block
-          printf '\n\n\n\n' | sudo bash NodeQuality/NodeQuality.sh
+          printf '\n\n\n\n' | sudo bash NodeQuality.sh
         timeout-minutes: 60
 
       - name: Upload NodeQuality results
