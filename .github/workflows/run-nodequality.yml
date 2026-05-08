@@ -1,0 +1,36 @@
+name: Run NodeQuality on push
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-nodequality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install runtime tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq
+
+      - name: Make script executable
+        run: |
+          chmod +x NodeQuality/NodeQuality.sh
+
+      - name: Run NodeQuality non-interactively
+        run: |
+          set -euo pipefail
+          # Provide default answers (4 empty lines) so `read` in the script doesn't block
+          printf '\n\n\n\n' | sudo bash NodeQuality/NodeQuality.sh
+        timeout-minutes: 60
+
+      - name: Upload NodeQuality results
+        uses: actions/upload-artifact@v7
+        with:
+          name: nodequality-results
+          path: |
+            *.log
+            *.json
