@@ -412,23 +412,23 @@ function run_HardwareQuality(){
     [[ "$run_hardware_quality_test" =~ ^[Vv]$ ]] && params=" -V"
     pre_fetch_info # HQ预处理
     payload=$(declare -p osinfo meminfo diskinfo) # HQ预处理
-    curl -Ls https://Hardware.Check.Place | chroot_run "env NQENV=$(printf '%q' "$payload") bash -s -- $opt_lang $params -y -o /result/$hardware_quality_json_filename" # HQ预处理
+    curl -Ls https://Hardware.Check.Place | chroot_run "env NQENV=$(printf '%q' "$payload") bash -s -- $opt_lang $params -y -p -o /result/$hardware_quality_json_filename" # HQ预处理
     # 原始语句为：chroot_run bash <(curl -Ls https://Hardware.Check.Place) $opt_lang -y -o /result/$hardware_quality_json_filename
 }
 
 
 function run_ip_quality(){
-    chroot_run bash <(curl -Ls https://IP.Check.Place) $opt_ipv $opt_lang -y -o /result/$ip_quality_json_filename
+    chroot_run bash <(curl -Ls https://IP.Check.Place) $opt_ipv $opt_lang -y -p -o /result/$ip_quality_json_filename
 }
 
 function run_net_quality(){
     local params=""
     [[ "$run_net_quality_test" =~ ^[Ll]$ ]] && params=" -L"
-    chroot_run bash <(curl -Ls https://Net.Check.Place) $opt_ipv $opt_lang $params -y -o /result/$net_quality_json_filename
+    chroot_run bash <(curl -Ls https://Net.Check.Place) $opt_ipv $opt_lang $params -y -p -o /result/$net_quality_json_filename
 }
 
 function run_net_trace(){
-    chroot_run bash <(curl -Ls https://Net.Check.Place) $opt_ipv $opt_lang -R -n -S 123 -o /result/$backroute_trace_json_filename
+    chroot_run bash <(curl -Ls https://Net.Check.Place) $opt_ipv $opt_lang -R -n -S 123 -p -o /result/$backroute_trace_json_filename
 }
 
 function save_results(){
