@@ -3,11 +3,11 @@
 original_dir="$(pwd)"
 current_time="$(date +%Y_%m_%d_%H_%M_%S)"
 work_dir=".nodequality$current_time"
-bench_os_url="https://github.com/PureBench/BenchOS/releases/latest/download/BenchOS-amd64.tar.gz"
-raw_file_prefix="https://raw.githubusercontent.com/PureBench/NodeQuality/refs/heads/main"
+bench_os_url="https://github.com/PureBenchScript/BenchOS/releases/latest/download/BenchOS-amd64.tar.gz"
+raw_file_prefix="https://raw.githubusercontent.com/PureBenchScript/NodeQuality/refs/heads/main"
 
 if uname -m | grep -Eq 'arm|aarch64'; then
-    bench_os_url="https://github.com/PureBench/BenchOS/releases/latest/download/BenchOS-arm64.tar.gz"
+    bench_os_url="https://github.com/PureBenchScript/BenchOS/releases/latest/download/BenchOS-arm64.tar.gz"
 fi
 
 header_info_filename=header_info.log
