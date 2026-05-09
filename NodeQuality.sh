@@ -19,12 +19,9 @@ net_quality_filename=net_quality.log
 net_quality_json_filename=net_quality.json
 backroute_trace_filename=backroute_trace.log
 backroute_trace_json_filename=backroute_trace.json
-port_filename=port.log
-
 lang="cn"
 opt_ipv=""
 opt_lang=""
-err_code=0
 
 declare -A LANG
 # ===== English =====
@@ -124,18 +121,6 @@ function _blue() {
 
 function _green() {
     echo -e "\033[0;32m$1\033[0m"
-}
-
-function _red_bold() {
-    echo -e "\033[1;31m$1\033[0m"
-}
-
-function _yellow_bold() {
-    echo -e "\033[1;33m$1\033[0m"
-}
-
-function _blue_bold() {
-    echo -e "\033[1;36m$1\033[0m"
 }
 
 function _green_bold() {
