@@ -440,6 +440,8 @@ function save_results(){
 function post_cleanup(){
     local exit_code="${1:-0}"
 
+    trap '' INT TERM SIGHUP EXIT
+
     chroot_run umount -R /dev &> /dev/null
     clear_mount
 
@@ -458,7 +460,6 @@ function post_cleanup(){
 }
 
 function sig_cleanup(){
-    trap '' INT TERM SIGHUP EXIT
     _green_bold "$(L cleanup)"
     post_cleanup 1
 }
