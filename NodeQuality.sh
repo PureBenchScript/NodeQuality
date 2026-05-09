@@ -182,8 +182,6 @@ function pre_cleanup(){
 }
 
 function clear_mount(){
-    swapoff $work_dir/swap 2>/dev/null
-
     umount $work_dir/BenchOS/proc/ 2> /dev/null
     umount $work_dir/BenchOS/sys/ 2> /dev/null
     umount -R $work_dir/BenchOS/dev/ 2> /dev/null
@@ -209,11 +207,6 @@ function load_bench_os(){
 
 function chroot_run(){
     chroot $work_dir/BenchOS /bin/bash -c "$*"
-}
-
-function load_part(){
-    # gb5-test.sh, swap part
-    . <(curl -sL "$raw_file_prefix/part/swap.sh")
 }
 
 function load_3rd_program(){
@@ -322,9 +315,6 @@ function pre_fetch_info(){
     if command -v loginctl >/dev/null 2>&1; then
         tmpuc="$(loginctl list-users 2>/dev/null | tail -n +2 | wc -l | tr -d ' ')"
         [[ "$tmpuc" -gt 0 ]] && osinfo[user]="$tmpuc"
-    elif [[ "$(uname -s)" == "Darwin" ]]; then
-        tmpuc="$(stat -f '%Su' /dev/console 2>/dev/null | wc -l | tr -d ' ')"
-        [[ "$tmpuc" -gt 0 ]] && osinfo[user]="$tmpuc"
     else
         tmpuc="$(who 2>/dev/null | wc -l | tr -d ' ')"
         [[ "$tmpuc" -gt 0 ]] && osinfo[user]="$tmpuc"
@@ -338,9 +328,6 @@ function pre_fetch_info(){
     elif command -v rc-service >/dev/null 2>&1; then
         osinfo[svcr]=$(rc-service -r 2>/dev/null | wc -l | tr -d ' ')
         osinfo[svct]=$(rc-service -l 2>/dev/null | wc -l | tr -d ' ')
-    elif [[ "$(uname -s)" == "Darwin" ]] && command -v launchctl >/dev/null 2>&1; then
-        osinfo[svcr]=$(launchctl list 2>/dev/null | tail -n +2 | wc -l | tr -d ' ')
-        osinfo[svct]="${osinfo[svcr]}"
     fi
     declare -gA meminfo
     case "${virt_type}" in
@@ -491,7 +478,6 @@ function main(){
     _green_bold "$(L loadbench)"
     load_bench_os
 
-    load_part
     load_3rd_program
 
     _green_bold "$(L basicinfo)"
