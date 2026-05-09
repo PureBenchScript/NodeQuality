@@ -4,7 +4,6 @@ original_dir="$(pwd)"
 current_time="$(date +%Y_%m_%d_%H_%M_%S)"
 work_dir=".nodequality$current_time"
 bench_os_url="https://github.com/PureBenchScript/BenchOS/releases/latest/download/BenchOS-amd64.tar.gz"
-raw_file_prefix="https://raw.githubusercontent.com/PureBenchScript/NodeQuality/refs/heads/main"
 
 if uname -m | grep -Eq 'arm|aarch64'; then
     bench_os_url="https://github.com/PureBenchScript/BenchOS/releases/latest/download/BenchOS-arm64.tar.gz"
@@ -215,7 +214,19 @@ function load_3rd_program(){
 }
 
 function run_header(){
-    chroot_run bash <(curl -Ls "$raw_file_prefix/part/header.sh")
+    local heading_date
+    heading_date="$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S CST')"
+
+    echo -ne "\e[0;36m"
+    cat <<-EOT
+########################################################################
+                  bash <(curl -sL https://run.NodeQuality.com)
+                   https://github.com/LloydAsp/NodeQuality
+        报告时间：${heading_date}  脚本版本：v0.0.1
+        频道: https://t.me/nodeselect 网站：https://NodeQuality.com
+########################################################################
+EOT
+    echo -ne "\033[0m"
 }
 
 function detect_virt() {
